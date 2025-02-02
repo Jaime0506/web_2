@@ -5,5 +5,6 @@ import userRoutes from "./routes/users.routes.js";
 const app = express(PORT)
 
 app.use(userRoutes)
+app.listen(PORT)
 
 console.log("Server on port", PORT)

@@ -2,8 +2,30 @@ import { Button } from '@heroui/button'
 import { Input } from '@heroui/input'
 import { useForm } from '../hooks/useForm'
 import { UserType } from '../types'
+import { addUser } from '../utils/api'
 
-const inputs = ["ID", "Nombre", "Apellido", "Telefono", "Direccion"]
+const inputs = [
+    {
+        key: "id",
+        label: "ID"
+    },
+    {
+        key: "nombre",
+        label: "Nombre"
+    },
+    {
+        key: "apellido",
+        label: "Apellido"
+    },
+    {
+        key: "telefono",
+        label: "Telefono"
+    },
+    {
+        key: "direccion",
+        label: "Direccion"
+    }
+]
 const INITIAL_STATE_FORM: UserType = {
     id: 0,
     nombre: "",
@@ -19,23 +41,26 @@ export const Form = () => {
 
         console.log("Me llamaron")
         console.log(form)
+
+        addUser(form)
     }
 
     return (
-        <form onSubmit={handleOnSubmit} className='grid grid-cols-2 w-full grid-rows-4 gap-x-10 justify-center p-4 items-center shadow-md rounded'>
+        <form onSubmit={handleOnSubmit} className='grid grid-cols-2 w-full grid-rows-4 gap-x-10 gap-y-5 justify-center p-4 items-center shadow-md rounded'>
             {
-                inputs.map((value) => (
+                inputs.map((item) => (
                     <Input
-                        key={value}
-                        label={value}
+                        name={item.key}
+                        key={item.key}
+                        label={item.label}
                         labelPlacement="outside"
-                        placeholder={value}
-                        type="text"
-                        className={value === "Direccion" ? "col-span-2" : ""}
+                        placeholder={item.label}
+                        type={item.key === "id" || item.key === "telefono" ? "number" : "text"}
+                        className={item.label === "Direccion" ? "col-span-2" : ""}
                         variant='bordered'
                         radius='sm'
                         onChange={handleInputChange}
-                        // value={}
+                        value={form[item.key as keyof UserType]?.toString() || ""}
                     />
                 ))
             }

@@ -3,7 +3,7 @@ import { addUsers, deleteUsers, getUserById, getUsers, updateUsers } from '../co
 
 const router = Router()
 
-// Obtener todos los usuarios
+// Obtener usuario with or without queries
 router.get('/users', getUsers)
 
 // Obtener usuario ID

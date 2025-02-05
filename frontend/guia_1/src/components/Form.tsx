@@ -1,77 +1,70 @@
 import { Button } from '@heroui/button'
-import { Input } from '@heroui/input'
-import { useForm } from '../hooks/useForm'
 import { UserType } from '../types'
-import { addUser } from '../utils/api'
+import { AddUsersForm } from './AddUsersForm'
+import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 
-const inputs = [
-    {
-        key: "id",
-        label: "ID"
-    },
-    {
-        key: "nombre",
-        label: "Nombre"
-    },
-    {
-        key: "apellido",
-        label: "Apellido"
-    },
-    {
-        key: "telefono",
-        label: "Telefono"
-    },
-    {
-        key: "direccion",
-        label: "Direccion"
-    }
-]
-const INITIAL_STATE_FORM: UserType = {
-    id: 0,
-    nombre: "",
-    apellido: "",
-    telefono: "",
-    direccion: ""
+import type { Dispatch, SetStateAction } from 'react'
+import { formController } from '../utils/formController'
+import { FindUsersForm } from './FindUsersForm'
+
+interface FormProps {
+    setUsers: Dispatch<SetStateAction<UserType[] | null>>
 }
 
-export const Form = () => {
-    const { form, handleInputChange } = useForm({initialState: INITIAL_STATE_FORM,})
+export const Form = ({ setUsers }: FormProps) => {
     const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        console.log("Me llamaron")
-        console.log(form)
+        const formData = new FormData(e.currentTarget)
+        const submitter = (e.nativeEvent as SubmitEvent).submitter
 
-        addUser(form)
+        if (!(submitter instanceof HTMLButtonElement)) return;
+
+        const formValues = Object.fromEntries(formData)
+
+        // Se hace la respectiva validaciones bla bla bla
+        formController({ formValues, submitterName: submitter.name, setUsers })
+        e.currentTarget.reset()
     }
 
     return (
-        <form onSubmit={handleOnSubmit} className='grid grid-cols-2 w-full grid-rows-4 gap-x-10 gap-y-5 justify-center p-4 items-center shadow-md rounded'>
-            {
-                inputs.map((item) => (
-                    <Input
-                        name={item.key}
-                        key={item.key}
-                        label={item.label}
-                        labelPlacement="outside"
-                        placeholder={item.label}
-                        type={item.key === "id" || item.key === "telefono" ? "number" : "text"}
-                        className={item.label === "Direccion" ? "col-span-2" : ""}
-                        variant='bordered'
-                        radius='sm'
-                        onChange={handleInputChange}
-                        value={form[item.key as keyof UserType]?.toString() || ""}
-                    />
-                ))
-            }
+        <form onSubmit={handleOnSubmit} className='w-full'>
+            <Tabs className="w-full rounded" >
+                <TabList>
+                    <Tab>Agregar</Tab>
+                    <Tab>Buscar</Tab>
+                </TabList>
+                <TabPanel className="">
+                    <AddUsersForm excludeKeys={[]} />
+                    <div className='flex items-center justify-center mt-2'>
+                        <Button
+                            name='addUsers'
+                            radius='md'
+                            className='bg-black w-[96%] text-white col-span-2'
+                            type='submit'
+                        >
+                            Agregar usuario
+                        </Button>
+                    </div>
+                </TabPanel>
 
-            <Button 
-                radius='sm'
-                className='bg-black text-white col-span-2'
-                type='submit'
-            >
-                Agregar Datos
-            </Button>
+                <TabPanel>
+                    <FindUsersForm />
+
+                    <div className='flex items-center justify-center mt-2'>
+                        <Button
+                            name='findUsers'
+                            radius='md'
+                            className='bg-black w-[96%] text-white col-span-2'
+                            type='submit'
+                        >
+                            Buscar usuario
+                        </Button>
+                    </div>
+
+                </TabPanel>
+            </Tabs>
+
         </form>
     )
 }

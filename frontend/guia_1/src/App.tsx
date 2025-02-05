@@ -24,7 +24,7 @@ export const App = () => {
                 </h1>
             </div>
             <div className=' p-8 flex-1 flex justify-center'>
-                <Form />
+                <Form setUsers={setUsers}/>
             </div>
             <div className='p-8 flex flex-1 flex-col gap-10'>
                 <h3 className='text-4xl font-bold'>

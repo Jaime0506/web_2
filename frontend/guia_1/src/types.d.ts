@@ -1,7 +1,7 @@
 export interface UserType {
     id?: number
-    nombre?: string
-    apellido?: string
-    telefono?: string
-    direccion?: string
+    first_name?: string
+    last_name?: string
+    phone?: string
+    address?: string
 }

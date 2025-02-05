@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { UserType } from "../types";
 
 interface useFormProps {
@@ -8,10 +8,6 @@ interface useFormProps {
 export const useForm = ({initialState}: useFormProps) => {
     const [form, setForm] = useState(initialState);
 
-    useEffect(() => {
-        console.log(form)
-    }, [form]);
-
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({
             ...form,
@@ -19,9 +15,14 @@ export const useForm = ({initialState}: useFormProps) => {
         })
     }
 
+    const resetValues = () => {
+        setForm(initialState)
+    }
+
     return {
         form,
 
-        handleInputChange
+        handleInputChange,
+        resetValues
     }
 }

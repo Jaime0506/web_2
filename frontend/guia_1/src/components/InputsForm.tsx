@@ -1,12 +1,16 @@
 import { Input } from "@heroui/input"
 import { filterInputs } from "../utils/filterInputs"
 
-export const FindUsersForm = () => {
+interface InputsFormProps {
+    excludeKeys?: string[]
+}
+
+export const InputsForm = ({ excludeKeys = [] }: InputsFormProps) => {
     return (
         <div className="grid items-center w-full">
 
             {
-                filterInputs([]).map(item => (
+                filterInputs(excludeKeys).map(item => (
                     <Input
                         name={item.key}
                         key={item.key}

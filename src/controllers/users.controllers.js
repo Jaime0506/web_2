@@ -84,8 +84,8 @@ export const deleteUsers = async (req, res) => {
     const { id } = req.params
 
     try {
-        const result = await pool.query('DELETE FROM users WHERE (id = $1)', [id])
-        const { rowCount } = result
+        const result = await pool.query('DELETE FROM users WHERE (id = $1) RETURNING *', [id])
+        const { rows, rowCount } = result
 
         if (rowCount === 0) {
             return res.status(404).json({
@@ -93,7 +93,7 @@ export const deleteUsers = async (req, res) => {
             })
         }
 
-        return res.sendStatus(204)
+        return res.json(rows[0])
     } catch (error) {
         console.log(error)
     }

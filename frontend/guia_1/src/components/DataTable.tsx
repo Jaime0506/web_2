@@ -1,6 +1,5 @@
 import { getKeyValue, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/table"
 import { UserType } from "../types"
-import { useEffect } from "react"
 
 const dataColumns = [
     {
@@ -30,11 +29,6 @@ interface DataTableProps {
 }
 
 export const DataTable = ({ users }: DataTableProps) => {
-
-    useEffect(() => {
-        console.log(users)
-    }, [users]);
-
     return (
         <Table aria-label="Table users">
             <TableHeader columns={dataColumns}>

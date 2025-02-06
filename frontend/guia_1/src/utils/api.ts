@@ -3,15 +3,15 @@ import { UserType } from "../types"
 
 const URL = 'http://localhost:4000/users'
 
-export const getUsers = async () => {
+export const getUsers = async (setUsers: Dispatch<SetStateAction<UserType[] | null>>) => {
     const response = await fetch(`${URL}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
     })
 
     const data = await response.json()
-
-    return data
+    console.log("Me llamaron")
+    setUsers(data)
 }
 
 export const findUsersByQueries = async (user: UserType, setUsers: Dispatch<SetStateAction<UserType[] | null>>) => {
@@ -25,7 +25,10 @@ export const findUsersByQueries = async (user: UserType, setUsers: Dispatch<SetS
 
     try {
         const queryParams = new URLSearchParams(filteredQuery).toString()
-        const response = await fetch(`${URL}?${queryParams}`)
+        const response = await fetch(`${URL}?${queryParams}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
 
         const data = await response.json()
         setUsers(data || [])
@@ -34,8 +37,6 @@ export const findUsersByQueries = async (user: UserType, setUsers: Dispatch<SetS
         console.log(error)
     }
 }
-
-export const getUser = async () => { }
 
 export const addUser = async (user: UserType, setUsers: Dispatch<SetStateAction<UserType[] | null>>) => {
     const newUser = { ...user }
@@ -62,5 +63,14 @@ export const addUser = async (user: UserType, setUsers: Dispatch<SetStateAction<
         ...(users ?? []),
         data
     ]))
+}
 
+export const deleteUser = async (id: number, setUsers: Dispatch<SetStateAction<UserType[] | null>>) => {
+    const response = await fetch(`${URL}/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+    })
+
+    const data = await response.json()
+    setUsers(users => (users?.filter(user => user.id !== data.id) || []))
 }

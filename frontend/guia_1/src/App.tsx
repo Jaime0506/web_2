@@ -9,8 +9,7 @@ export const App = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await getUsers()
-            setUsers(data)
+            await getUsers(setUsers)
         }
 
         fetchData()

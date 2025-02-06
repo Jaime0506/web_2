@@ -1,6 +1,6 @@
 import type { UserType } from "../types"
 import type { Dispatch, SetStateAction } from "react"
-import { addUser, findUsersByQueries } from "./api"
+import { addUser, deleteUser, findUsersByQueries } from "./api"
 
 interface formControllerTypes {
     formValues: UserType
@@ -10,11 +10,16 @@ interface formControllerTypes {
 
 export const formController = ({formValues, submitterName, setUsers }: formControllerTypes) => {
     if (submitterName === "addUsers") {
-        addUser(formValues, setUsers)
+        return addUser(formValues, setUsers)
     }
 
     if (submitterName === "findUsers") {
-        console.log("Necesito buscar")
-        findUsersByQueries(formValues, setUsers)
+        return findUsersByQueries(formValues, setUsers)
+    }
+
+    if (submitterName === "deleteUsers") {
+        if (formValues.id) return deleteUser(formValues.id, setUsers)
+        
+        console.log("No se paso ID")
     }
 }

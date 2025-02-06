@@ -1,11 +1,11 @@
-import { Button } from '@heroui/button'
-import { UserType } from '../types'
-import { AddUsersForm } from './AddUsersForm'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
+import { ButtonForm } from './ButtonForm'
+import { InputsForm } from './InputsForm'
+import { formController } from '../utils/formController'
 
 import type { Dispatch, SetStateAction } from 'react'
-import { formController } from '../utils/formController'
-import { FindUsersForm } from './FindUsersForm'
+import type { UserType } from '../types'
+import { getUsers } from '../utils/api'
 
 interface FormProps {
     setUsers: Dispatch<SetStateAction<UserType[] | null>>
@@ -27,44 +27,35 @@ export const Form = ({ setUsers }: FormProps) => {
         e.currentTarget.reset()
     }
 
+    const onSelectTab = (index: number, lastIndex: number) => {
+        if (index === lastIndex) return
+        getUsers(setUsers)
+    }
+
     return (
         <form onSubmit={handleOnSubmit} className='w-full'>
-            <Tabs className="w-full rounded" >
+            <Tabs className="w-full rounded" onSelect={onSelectTab}>
                 <TabList>
                     <Tab>Agregar</Tab>
                     <Tab>Buscar</Tab>
+                    <Tab>Eliminar</Tab>
                 </TabList>
-                <TabPanel className="">
-                    <AddUsersForm excludeKeys={[]} />
-                    <div className='flex items-center justify-center mt-2'>
-                        <Button
-                            name='addUsers'
-                            radius='md'
-                            className='bg-black w-[96%] text-white col-span-2'
-                            type='submit'
-                        >
-                            Agregar usuario
-                        </Button>
-                    </div>
+                <TabPanel>
+                    <InputsForm />
+                    <ButtonForm label='Agregar usuario' name='addUsers'/>
                 </TabPanel>
 
                 <TabPanel>
-                    <FindUsersForm />
-
-                    <div className='flex items-center justify-center mt-2'>
-                        <Button
-                            name='findUsers'
-                            radius='md'
-                            className='bg-black w-[96%] text-white col-span-2'
-                            type='submit'
-                        >
-                            Buscar usuario
-                        </Button>
-                    </div>
+                    <InputsForm />
+                    <ButtonForm label='Buscar usuario' name='findUsers' />
 
                 </TabPanel>
-            </Tabs>
 
+                <TabPanel>
+                    <InputsForm excludeKeys={["first_name", "last_name", "phone", "address"]} />
+                    <ButtonForm label='Eliminar usuario' name='deleteUsers' />
+                </TabPanel>
+            </Tabs>
         </form>
     )
 }

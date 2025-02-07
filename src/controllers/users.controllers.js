@@ -1,13 +1,4 @@
-import { calcLength } from "framer-motion"
 import { pool } from "../db.js"
-
-// export const getUsers = async (req, res) => {
-//     try {
-        
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
 
 export const getUserById = async (req, res) => {
     const { id } = req.params
@@ -56,12 +47,30 @@ export const addUsers = async (req, res) => {
 
 export const updateUsers = async (req, res) => {
     const { id } = req.params
-    const { first_name, last_name, phone, address } = req.body
+    const fields = req.body
 
-    console.log(id, req.body)
+    if (Object.keys(fields).length === 0) {
+        return res.status(400).json({ message: 'No fields provided for update' });
+    }
 
-    const sql = 'UPDATE users SET first_name = $1, last_name = $2, phone = $3, address = $4 WHERE (id = $5) RETURNING *'
-    const values = [first_name, last_name, phone, address, id]
+    const setClauses = []
+    const values = []
+    let index = 1
+
+    for(const [key, value] of Object.entries(fields)) {
+        if (value !== undefined && value.length > 0) {
+            setClauses.push(`${key} = $${index++}`)
+            values.push(value)
+        }
+    }
+
+    if (setClauses.length === 0) {
+        return res.status(400).json({ message: 'No valid fields to update' })
+    }
+
+    values.push(id)
+
+    const sql = `UPDATE users set ${setClauses.join(', ')} WHERE id = $${index} RETURNING *`
     
     try {
         const result = await pool.query(sql, values)
@@ -153,8 +162,6 @@ export const getUsers = async (req, res) => {
         const { rows } = result
 
         if (rows.length === 0) {
-            // console.log(address)
-            console.log(sql, values)
             return res.status(404).json({
                 message: "User not found"
             })

@@ -38,6 +38,7 @@ export const Form = ({ setUsers }: FormProps) => {
                 <TabList>
                     <Tab>Agregar</Tab>
                     <Tab>Buscar</Tab>
+                    <Tab>Actualizar</Tab>
                     <Tab>Eliminar</Tab>
                 </TabList>
                 <TabPanel>
@@ -49,6 +50,11 @@ export const Form = ({ setUsers }: FormProps) => {
                     <InputsForm />
                     <ButtonForm label='Buscar usuario' name='findUsers' />
 
+                </TabPanel>
+
+                <TabPanel>
+                    <InputsForm />
+                    <ButtonForm label='Actualizar' name='updateUsers' />
                 </TabPanel>
 
                 <TabPanel>

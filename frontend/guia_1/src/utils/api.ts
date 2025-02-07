@@ -74,3 +74,16 @@ export const deleteUser = async (id: number, setUsers: Dispatch<SetStateAction<U
     const data = await response.json()
     setUsers(users => (users?.filter(user => user.id !== data.id) || []))
 }
+
+export const updateUser = async (user: UserType, setUsers: Dispatch<SetStateAction<UserType[] | null>>) => {
+    const response = await fetch(`${URL}/${user.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user)
+    })
+
+    const data = await response.json()
+    setUsers((prevUsers) => (
+        prevUsers ? prevUsers.map((u) => (u.id === data.id ? data : u)) : []
+    ))
+}
